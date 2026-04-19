@@ -37,6 +37,11 @@ namespace TaskManager.UIModels
                 : (double)Tasks.Count(t => t.IsCompleted) / Tasks.Count * 100.0;
 
         /// <summary>
+        /// Computed: Progress as a fraction (0.0–1.0) for MAUI ProgressBar binding.
+        /// </summary>
+        public double ProgressFraction => Progress / 100.0;
+
+        /// <summary>
         /// Creates a ProjectUiModel by copying data from a storage model (ProjectDbModel).
         /// Tasks list starts empty and is filled later via the repository.
         /// </summary>

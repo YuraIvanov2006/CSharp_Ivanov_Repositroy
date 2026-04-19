@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Shell
     x:Class="Lab01Ivanov.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Lab01Ivanov"
-    Title="Lab01Ivanov">
+    xmlns:pages="clr-namespace:Lab01Ivanov.Pages"
+    Shell.FlyoutBehavior="Disabled">
 
+    <!--
+        Main page of the app — ProjectsPage.
+        Sub-pages (ProjectDetailPage, TaskDetailPage) are registered
+        as routes in AppShell.xaml.cs and navigated to via Shell.Current.GoToAsync().
+    -->
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Projects"
+        ContentTemplate="{DataTemplate pages:ProjectsPage}"
+        Route="ProjectsPage" />
 
 </Shell>

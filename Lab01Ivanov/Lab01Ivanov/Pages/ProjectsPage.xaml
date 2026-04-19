@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lab01Ivanov.Pages.ProjectsPage"
+             Title="Task Manager"
+             BackgroundColor="#1A1A2E">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,40,20,16" BackgroundColor="#16213E">
+            <Label Text="📋 Task Manager"
+                   FontSize="28" FontAttributes="Bold" TextColor="#E94560" />
+            <Label Text="Select a project to view its tasks"
+                   FontSize="14" TextColor="#8080A0" Margin="0,4,0,0" />
+        </VerticalStackLayout>
+
+        <!-- Projects list -->
+        <CollectionView Grid.Row="1"
+                        x:Name="ProjectsCollection"
+                        SelectionMode="Single"
+                        SelectionChanged="OnProjectSelected"
+                        Margin="0,8">
+
+            <CollectionView.EmptyView>
+                <Label Text="No projects found." HorizontalOptions="Center"
+                       VerticalOptions="Center" TextColor="#8080A0" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="16,6">
+                        <Frame BackgroundColor="#16213E" CornerRadius="14"
+                               Padding="18,14" HasShadow="True">
+
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
+
+                                <!-- Name + Type badge -->
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           FontSize="17" FontAttributes="Bold"
+                                           TextColor="#E0E0F0" />
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="#0F3460"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="10,4">
+                                        <Label Text="{Binding Type}"
+                                               FontSize="11" TextColor="#4FC3F7" />
+                                    </Border>
+                                </Grid>
+
+                                <!-- Description -->
+                                <Label Grid.Row="1"
+                                       Text="{Binding Description}"
+                                       FontSize="13" TextColor="#8080A0"
+                                       MaxLines="2" LineBreakMode="TailTruncation" />
+
+                                <!-- Progress % text -->
+                                <Label Grid.Row="2" FontSize="12">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Progress: " TextColor="#A0A0B0" />
+                                            <Span Text="{Binding Progress, StringFormat='{0:F1}%'}"
+                                                  TextColor="#4FC3F7" FontAttributes="Bold" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <!-- Progress bar (uses ProgressFraction 0.0–1.0) -->
+                                <ProgressBar Grid.Row="3"
+                                             Progress="{Binding ProgressFraction}"
+                                             ProgressColor="#4FC3F7" />
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

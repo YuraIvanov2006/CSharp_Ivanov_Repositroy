@@ -14,36 +14,46 @@ namespace TaskManager.Services
     /// In future labs this class can be swapped to read from a real database
     /// without changing any code in UIModels or the console app.
     /// </summary>
-    public class TaskManagerRepository
+    /// <summary>
+    /// Concrete implementation of ITaskManagerRepository.
+    /// Registered in MauiProgram.cs via DI: AddSingleton&lt;ITaskManagerRepository, TaskManagerRepository&gt;
+    /// </summary>
+    public class TaskManagerRepository : ITaskManagerRepository
     {
-        /// <summary>
-        /// Returns all projects as UI models with an empty Tasks list.
-        /// Tasks are NOT loaded here — call <see cref="LoadTasksForProject"/> separately.
-        /// </summary>
+        /// <inheritdoc/>
         public List<ProjectUiModel> GetAllProjects()
         {
             IReadOnlyList<ProjectDbModel> dbProjects = FakeStorage.GetAllProjects();
-
-            // Convert each storage model to a UI model
             return dbProjects
                 .Select(db => new ProjectUiModel(db))
                 .ToList();
         }
 
-        /// <summary>
-        /// Loads all tasks that belong to the given project and attaches them to it.
-        /// Sets <see cref="ProjectUiModel.TasksLoaded"/> to true after loading.
-        /// Safe to call multiple times — tasks are reloaded each time.
-        /// </summary>
+        /// <inheritdoc/>
         public void LoadTasksForProject(ProjectUiModel project)
         {
             IReadOnlyList<TaskDbModel> dbTasks = FakeStorage.GetTasksByProjectId(project.Id);
-
-            project.Tasks = dbTasks
-                .Select(db => new TaskUiModel(db))
-                .ToList();
-
+            project.Tasks      = dbTasks.Select(db => new TaskUiModel(db)).ToList();
             project.TasksLoaded = true;
+        }
+
+        /// <inheritdoc/>
+        public ProjectUiModel? GetProjectById(int id)
+        {
+            var dbProject = FakeStorage.GetAllProjects().FirstOrDefault(p => p.Id == id);
+            if (dbProject == null) return null;
+
+            var project = new ProjectUiModel(dbProject);
+            LoadTasksForProject(project);
+            return project;
+        }
+
+        /// <inheritdoc/>
+        public TaskUiModel? GetTaskById(int projectId, int taskId)
+        {
+            var dbTask = FakeStorage.GetTasksByProjectId(projectId)
+                                    .FirstOrDefault(t => t.Id == taskId);
+            return dbTask != null ? new TaskUiModel(dbTask) : null;
         }
     }
 }

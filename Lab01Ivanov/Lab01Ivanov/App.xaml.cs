@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Lab01Ivanov
 {
@@ -11,7 +11,13 @@ namespace Lab01Ivanov
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            var window = new Window(new AppShell());
+
+            // Phone-like dimensions (iPhone 14 size)
+            window.Width  = 393;
+            window.Height = 852;
+
+            return window;
         }
     }
 }
