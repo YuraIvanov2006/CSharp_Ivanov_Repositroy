@@ -12,6 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Global converters -->
             <conv:BoolToYesNoConverter x:Key="BoolToYesNoConverter" />
+            <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

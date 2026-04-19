@@ -1,48 +1,35 @@
+using SQLite;
 using TaskManager.DBModels.Enums;
 
 namespace TaskManager.DBModels
 {
     /// <summary>
-    /// Storage model for the Task entity.
-    /// Responsibility: storing raw task data only.
-    /// Rules:
-    ///   - No computed fields (e.g. IsOverdue is NOT here).
-    ///   - No reference/navigation to the parent Project object — only ProjectId is stored.
-    ///   - Id has no setter — it cannot be changed after creation.
+    /// Storage model for a Task entity.
+    /// Mapped to the "Tasks" SQLite table.
+    /// Rules: no computed fields (IsOverdue), only stores ProjectId as FK.
     /// </summary>
+    [Table("Tasks")]
     public class TaskDbModel
     {
-        /// <summary>Unique identifier. Set once at creation, never changed.</summary>
-        public int Id { get; }
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
 
-        /// <summary>
-        /// Foreign key: the Id of the project this task belongs to.
-        /// A task must belong to exactly one project.
-        /// </summary>
+        /// <summary>FK to Projects table — defines ownership.</summary>
+        [Indexed]
         public int ProjectId { get; set; }
 
-        /// <summary>Name/title of the task.</summary>
-        public string Name { get; set; }
-
-        /// <summary>Detailed description or technical specification.</summary>
-        public string Description { get; set; }
-
-        /// <summary>Priority level of the task.</summary>
+        public string Name        { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public TaskPriority Priority { get; set; }
+        public DateTime DueDate   { get; set; }
+        public bool IsCompleted   { get; set; }
 
-        /// <summary>The deadline by which the task must be completed.</summary>
-        public DateTime DueDate { get; set; }
+        /// <summary>Parameterless constructor required by SQLite ORM.</summary>
+        public TaskDbModel() { }
 
-        /// <summary>Whether the task has been marked as completed.</summary>
-        public bool IsCompleted { get; set; }
-
-        /// <summary>
-        /// Creates a new TaskDbModel with all required fields.
-        /// </summary>
-        public TaskDbModel(int id, int projectId, string name, string description,
-            TaskPriority priority, DateTime dueDate, bool isCompleted)
+        public TaskDbModel(int projectId, string name, string description,
+            TaskPriority priority, DateTime dueDate, bool isCompleted = false)
         {
-            Id          = id;
             ProjectId   = projectId;
             Name        = name;
             Description = description;

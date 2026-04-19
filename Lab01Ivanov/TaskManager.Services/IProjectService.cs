@@ -4,18 +4,28 @@ using TaskManager.DTOModels.Task;
 namespace TaskManager.Services
 {
     /// <summary>
-    /// Contract for the project service layer.
-    /// UI components depend on this interface — never on the concrete class.
+    /// Full async service contract for the Task Manager app.
+    /// UI depends only on this interface — never on repositories or DBModels.
     /// </summary>
     public interface IProjectService
     {
-        /// <summary>Returns all projects as list DTOs.</summary>
-        List<ProjectListDto> GetAllProjects();
+        Task InitializeAsync();
 
-        /// <summary>Returns full project details with tasks, or null if not found.</summary>
-        ProjectDetailDto? GetProjectDetail(int projectId);
+        // ── Projects ──────────────────────────────────────────────────────────
+        Task<List<ProjectListDto>> GetAllProjectsAsync(string? search = null, string? sortBy = null);
+        Task<ProjectDetailDto?> GetProjectDetailAsync(int projectId, string? taskSearch = null, string? taskSortBy = null);
+        Task AddProjectAsync(CreateProjectDto dto);
+        Task UpdateProjectAsync(UpdateProjectDto dto);
+        Task DeleteProjectAsync(int id);
 
-        /// <summary>Returns full task details, or null if not found.</summary>
-        TaskDetailDto? GetTaskDetail(int projectId, int taskId);
+        // ── Tasks ─────────────────────────────────────────────────────────────
+        Task<TaskDetailDto?> GetTaskDetailAsync(int taskId);
+        Task AddTaskAsync(CreateTaskDto dto);
+        Task UpdateTaskAsync(UpdateTaskDto dto);
+        Task DeleteTaskAsync(int id);
+
+        // ── For edit forms ────────────────────────────────────────────────────
+        Task<UpdateProjectDto?> GetProjectForEditAsync(int id);
+        Task<UpdateTaskDto?> GetTaskForEditAsync(int taskId);
     }
 }

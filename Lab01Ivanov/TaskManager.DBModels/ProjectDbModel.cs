@@ -1,35 +1,29 @@
+using SQLite;
 using TaskManager.DBModels.Enums;
 
 namespace TaskManager.DBModels
 {
     /// <summary>
-    /// Storage model for the Project entity.
-    /// Responsibility: storing raw project data only.
-    /// Rules:
-    ///   - No computed fields (e.g. Progress is NOT here).
-    ///   - No collection of child Task objects.
-    ///   - Id has no setter — it cannot be changed after creation.
+    /// Storage model for a Project entity.
+    /// Mapped to the "Projects" SQLite table via sqlite-net-pcl attributes.
+    /// Rules: no computed fields, no task collections.
     /// </summary>
+    [Table("Projects")]
     public class ProjectDbModel
     {
-        /// <summary>Unique identifier. Set once at creation, never changed.</summary>
-        public int Id { get; }
+        /// <summary>Auto-incremented PK set by SQLite on insert.</summary>
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
 
-        /// <summary>Name/title of the project.</summary>
-        public string Name { get; set; }
+        public string Name        { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public ProjectType Type   { get; set; }
 
-        /// <summary>Short description of the project's goal.</summary>
-        public string Description { get; set; }
+        /// <summary>Parameterless constructor required by SQLite ORM.</summary>
+        public ProjectDbModel() { }
 
-        /// <summary>Category/type of the project.</summary>
-        public ProjectType Type { get; set; }
-
-        /// <summary>
-        /// Creates a new ProjectDbModel with all required fields.
-        /// </summary>
-        public ProjectDbModel(int id, string name, string description, ProjectType type)
+        public ProjectDbModel(string name, string description, ProjectType type)
         {
-            Id          = id;
             Name        = name;
             Description = description;
             Type        = type;

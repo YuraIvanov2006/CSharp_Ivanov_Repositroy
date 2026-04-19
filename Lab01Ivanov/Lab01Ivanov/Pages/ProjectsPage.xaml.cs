@@ -12,11 +12,11 @@ namespace Lab01Ivanov.Pages
             BindingContext = _viewModel = viewModel;
         }
 
-        // OnAppearing triggers the ViewModel to load data
-        protected override void OnAppearing()
+        // Allowed by task: async OnAppearing to trigger data load
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            _viewModel.LoadProjects();
+            await _viewModel.LoadProjectsAsync();
         }
     }
 }

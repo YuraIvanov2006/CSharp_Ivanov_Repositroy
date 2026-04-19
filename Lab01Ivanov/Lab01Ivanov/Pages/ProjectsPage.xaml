@@ -5,61 +5,87 @@
              Title="Task Manager"
              BackgroundColor="#1A1A2E">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
 
         <!-- Header -->
-        <VerticalStackLayout Grid.Row="0" Padding="20,40,20,16" BackgroundColor="#16213E">
+        <VerticalStackLayout Grid.Row="0" Padding="20,40,20,10" BackgroundColor="#16213E">
             <Label Text="📋 Task Manager"
-                   FontSize="28" FontAttributes="Bold" TextColor="#E94560" />
-            <Label Text="Select a project to view its tasks"
-                   FontSize="14" TextColor="#8080A0" Margin="0,4,0,0" />
+                   FontSize="26" FontAttributes="Bold" TextColor="#E94560" />
         </VerticalStackLayout>
 
-        <!-- Projects list — ItemsSource and SelectedItem bound to ViewModel -->
-        <CollectionView Grid.Row="1"
+        <!-- Search + Sort + Add -->
+        <Grid Grid.Row="1" Padding="12,8" ColumnDefinitions="*,140,50" ColumnSpacing="6"
+              BackgroundColor="#16213E">
+            <SearchBar Grid.Column="0" Text="{Binding SearchText}"
+                       Placeholder="Search projects..." PlaceholderColor="#505070"
+                       BackgroundColor="#1A1A2E" TextColor="#E0E0F0" />
+            <Picker Grid.Column="1" ItemsSource="{Binding SortOptions}"
+                    SelectedItem="{Binding SelectedSort}"
+                    BackgroundColor="#1A1A2E" TextColor="#4FC3F7" />
+            <Button Grid.Column="2" Text="＋" Command="{Binding AddProjectCommand}"
+                    BackgroundColor="#E94560" TextColor="White" CornerRadius="8" FontSize="20" />
+        </Grid>
+
+        <!-- Projects list -->
+        <CollectionView Grid.Row="2"
                         ItemsSource="{Binding Projects}"
                         SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
                         SelectionMode="Single"
-                        Margin="0,8">
+                        Margin="0,4">
             <CollectionView.EmptyView>
                 <Label Text="No projects found." HorizontalOptions="Center"
-                       TextColor="#8080A0" Margin="0,20" />
+                       TextColor="#8080A0" Margin="0,40" />
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="16,6">
-                        <Frame BackgroundColor="#16213E" CornerRadius="14"
-                               Padding="18,14" HasShadow="True">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
-                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0" Text="{Binding Name}"
-                                           FontSize="17" FontAttributes="Bold" TextColor="#E0E0F0" />
-                                    <Border Grid.Column="1" BackgroundColor="#0F3460"
-                                            StrokeShape="RoundRectangle 8" Padding="10,4">
-                                        <Label Text="{Binding TypeDisplay}"
-                                               FontSize="11" TextColor="#4FC3F7" />
-                                    </Border>
+                    <Grid Padding="12,5">
+                        <SwipeView>
+                            <!-- Swipe left to delete -->
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete" BackgroundColor="#E94560"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteProjectCommand}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame BackgroundColor="#16213E" CornerRadius="12"
+                                   Padding="16,12" HasShadow="True">
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5">
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0" Text="{Binding Name}"
+                                               FontSize="16" FontAttributes="Bold" TextColor="#E0E0F0" />
+                                        <Border Grid.Column="1" BackgroundColor="#0F3460"
+                                                StrokeShape="RoundRectangle 6" Padding="8,3">
+                                            <Label Text="{Binding TypeDisplay}"
+                                                   FontSize="10" TextColor="#4FC3F7" />
+                                        </Border>
+                                    </Grid>
+                                    <Label Grid.Row="1" Text="{Binding Description}"
+                                           FontSize="12" TextColor="#8080A0"
+                                           MaxLines="2" LineBreakMode="TailTruncation" />
+                                    <Label Grid.Row="2" FontSize="11">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Progress: " TextColor="#A0A0B0" />
+                                                <Span Text="{Binding Progress, StringFormat='{0:F1}%'}"
+                                                      TextColor="#4FC3F7" FontAttributes="Bold" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <ProgressBar Grid.Row="3"
+                                                 Progress="{Binding ProgressFraction}"
+                                                 ProgressColor="#4FC3F7" />
                                 </Grid>
-                                <Label Grid.Row="1" Text="{Binding Description}"
-                                       FontSize="13" TextColor="#8080A0"
-                                       MaxLines="2" LineBreakMode="TailTruncation" />
-                                <Label Grid.Row="2" FontSize="12">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="Progress: " TextColor="#A0A0B0" />
-                                            <Span Text="{Binding Progress, StringFormat='{0:F1}%'}"
-                                                  TextColor="#4FC3F7" FontAttributes="Bold" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <ProgressBar Grid.Row="3"
-                                             Progress="{Binding ProgressFraction}"
-                                             ProgressColor="#4FC3F7" />
-                            </Grid>
-                        </Frame>
+                            </Frame>
+                        </SwipeView>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <!-- Loading overlay -->
+        <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="#E94560" VerticalOptions="Center" HorizontalOptions="Center" />
     </Grid>
 </ContentPage>

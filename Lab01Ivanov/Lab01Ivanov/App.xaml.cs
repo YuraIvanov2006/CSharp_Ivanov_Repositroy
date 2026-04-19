@@ -4,19 +4,17 @@ namespace Lab01Ivanov
 {
     public partial class App : Application
     {
-        public App()
+        public App(AppShell shell)
         {
             InitializeComponent();
+            MainPage = shell;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            var window = new Window(new AppShell());
-
-            // Phone-like dimensions (iPhone 14 size)
+            var window = new Window(MainPage!);
             window.Width  = 393;
             window.Height = 852;
-
             return window;
         }
     }

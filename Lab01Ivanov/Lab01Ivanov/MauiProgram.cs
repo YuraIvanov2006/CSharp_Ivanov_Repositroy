@@ -19,23 +19,28 @@ namespace Lab01Ivanov
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // ── IoC / Dependency Injection registrations ──────────────────────
-            //
-            // Layer 1 — Repository (Singleton: one shared data source)
+            // ── Layer 1: Repository (SQLite) ──────────────────────────────────
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "taskmanager.db3");
+            builder.Services.AddSingleton(new DatabaseContext(dbPath));
             builder.Services.AddSingleton<IProjectRepository, ProjectRepository>();
 
-            // Layer 2 — Services (Singleton: stateless converters)
+            // ── Layer 2: Services ─────────────────────────────────────────────
             builder.Services.AddSingleton<IProjectService, ProjectService>();
 
-            // Layer 3 — ViewModels (Transient: fresh instance per navigation)
+            // ── Layer 3: ViewModels (Transient — fresh per navigation) ────────
             builder.Services.AddTransient<ProjectsViewModel>();
             builder.Services.AddTransient<ProjectDetailViewModel>();
             builder.Services.AddTransient<TaskDetailViewModel>();
+            builder.Services.AddTransient<ProjectEditViewModel>();
+            builder.Services.AddTransient<TaskEditViewModel>();
 
-            // Pages (Transient — resolved with injected ViewModels)
+            // ── Pages + Shell ─────────────────────────────────────────────────
+            builder.Services.AddSingleton<AppShell>();
             builder.Services.AddTransient<ProjectsPage>();
             builder.Services.AddTransient<ProjectDetailPage>();
             builder.Services.AddTransient<TaskDetailPage>();
+            builder.Services.AddTransient<ProjectEditPage>();
+            builder.Services.AddTransient<TaskEditPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
