@@ -2,71 +2,70 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Lab01Ivanov.Pages.ProjectDetailPage"
-             Title="Project Details"
+             Title="{Binding Project.Name}"
              BackgroundColor="#1A1A2E">
 
     <ScrollView>
         <VerticalStackLayout Spacing="0">
 
-            <!-- Project info card -->
-            <Frame Margin="16,16,16,8" BackgroundColor="#16213E"
-                   CornerRadius="14" Padding="20">
+            <!-- Project info card — all bindings go to ViewModel.Project.* -->
+            <Frame Margin="16,16,16,8" BackgroundColor="#16213E" CornerRadius="14" Padding="20">
                 <VerticalStackLayout Spacing="8">
-
-                    <Label x:Name="ProjectNameLabel"
+                    <Label Text="{Binding Project.Name}"
                            FontSize="22" FontAttributes="Bold" TextColor="#E94560" />
-
                     <Border BackgroundColor="#0F3460" StrokeShape="RoundRectangle 8"
                             Padding="10,4" HorizontalOptions="Start">
-                        <Label x:Name="ProjectTypeLabel" FontSize="12" TextColor="#4FC3F7" />
+                        <Label Text="{Binding Project.TypeDisplay}" FontSize="12" TextColor="#4FC3F7" />
                     </Border>
-
-                    <Label x:Name="ProjectDescLabel"
-                           FontSize="14" TextColor="#A0A0B0" Margin="0,4,0,0" />
-
-                    <!-- Progress -->
-                    <Label x:Name="ProjectProgressLabel"
-                           FontSize="13" TextColor="#4FC3F7" FontAttributes="Bold" />
-                    <ProgressBar x:Name="ProjectProgressBar" ProgressColor="#4FC3F7" />
-
-                    <!-- Task stats -->
-                    <Label x:Name="ProjectStatsLabel" FontSize="12" TextColor="#8080A0" />
+                    <Label Text="{Binding Project.Description}" FontSize="14" TextColor="#A0A0B0" />
+                    <Label FontSize="13" TextColor="#4FC3F7" FontAttributes="Bold">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Progress: " TextColor="#A0A0B0" />
+                                <Span Text="{Binding Project.Progress, StringFormat='{0:F1}%'}"
+                                      TextColor="#4FC3F7" FontAttributes="Bold" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <ProgressBar Progress="{Binding Project.ProgressFraction}" ProgressColor="#4FC3F7" />
+                    <Label FontSize="12" TextColor="#8080A0">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Project.TotalTasks}" />
+                                <Span Text=" tasks  •  " />
+                                <Span Text="{Binding Project.CompletedTasks}" />
+                                <Span Text=" completed  •  " />
+                                <Span Text="{Binding Project.OverdueTasks}" />
+                                <Span Text=" overdue" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Tasks section header -->
             <Label Text="Tasks" Margin="20,12,20,4"
                    FontSize="18" FontAttributes="Bold" TextColor="#E0E0F0" />
 
-            <!-- Tasks list -->
-            <CollectionView x:Name="TasksCollection"
+            <!-- Task list — SelectedItem bound to ViewModel.SelectedTask -->
+            <CollectionView ItemsSource="{Binding Project.Tasks}"
+                            SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
                             SelectionMode="Single"
-                            SelectionChanged="OnTaskSelected"
                             HeightRequest="600">
-
                 <CollectionView.EmptyView>
                     <Label Text="No tasks in this project."
-                           HorizontalOptions="Center" TextColor="#8080A0"
-                           Margin="0,20" />
+                           HorizontalOptions="Center" TextColor="#8080A0" Margin="0,20" />
                 </CollectionView.EmptyView>
-
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="16,4">
                             <Frame CornerRadius="10" Padding="14,10" HasShadow="False"
-                                   BackgroundColor="{Binding StatusColor}">
+                                   BackgroundColor="#16213E">
                                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-
-                                    <!-- Status icon -->
-                                    <Label Grid.Column="0"
-                                           Text="{Binding StatusIcon}"
+                                    <Label Grid.Column="0" Text="{Binding StatusIcon}"
                                            FontSize="18" VerticalOptions="Center" />
-
-                                    <!-- Name + due date -->
                                     <VerticalStackLayout Grid.Column="1" Spacing="2">
                                         <Label Text="{Binding Name}"
-                                               FontSize="14" FontAttributes="Bold"
-                                               TextColor="#E0E0F0" />
+                                               FontSize="14" FontAttributes="Bold" TextColor="#E0E0F0" />
                                         <Label FontSize="11" TextColor="#8080A0">
                                             <Label.FormattedText>
                                                 <FormattedString>
@@ -76,13 +75,10 @@
                                             </Label.FormattedText>
                                         </Label>
                                     </VerticalStackLayout>
-
-                                    <!-- Priority badge -->
-                                    <Border Grid.Column="2"
-                                            BackgroundColor="#1A1A2E"
+                                    <Border Grid.Column="2" BackgroundColor="#1A1A2E"
                                             StrokeShape="RoundRectangle 6"
                                             Padding="8,3" VerticalOptions="Center">
-                                        <Label Text="{Binding Priority}"
+                                        <Label Text="{Binding PriorityDisplay}"
                                                FontSize="10" TextColor="#4FC3F7" />
                                     </Border>
                                 </Grid>
@@ -91,7 +87,6 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

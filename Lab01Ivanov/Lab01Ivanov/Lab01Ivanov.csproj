@@ -71,6 +71,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\TaskManager.DTOModels\TaskManager.DTOModels.csproj" />
 		<ProjectReference Include="..\TaskManager.Services\TaskManager.Services.csproj" />
 	</ItemGroup>
 

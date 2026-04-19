@@ -6,7 +6,5 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\TaskManager.DBModels\TaskManager.DBModels.csproj" />
-    <ProjectReference Include="..\TaskManager.Repository\TaskManager.Repository.csproj" />
-    <ProjectReference Include="..\TaskManager.DTOModels\TaskManager.DTOModels.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Logging;
-using TaskManager.Services;
 using Lab01Ivanov.Pages;
+using Lab01Ivanov.ViewModels;
+using TaskManager.Repository;
+using TaskManager.Services;
 
 namespace Lab01Ivanov
 {
@@ -17,11 +19,20 @@ namespace Lab01Ivanov
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // ── Inversion of Control / Dependency Injection ───────────────────
-            // ITaskManagerRepository is registered as Singleton:
-            //   one shared instance lives for the whole app lifetime.
-            // Pages are Transient: a fresh instance is created on each navigation.
-            builder.Services.AddSingleton<ITaskManagerRepository, TaskManagerRepository>();
+            // ── IoC / Dependency Injection registrations ──────────────────────
+            //
+            // Layer 1 — Repository (Singleton: one shared data source)
+            builder.Services.AddSingleton<IProjectRepository, ProjectRepository>();
+
+            // Layer 2 — Services (Singleton: stateless converters)
+            builder.Services.AddSingleton<IProjectService, ProjectService>();
+
+            // Layer 3 — ViewModels (Transient: fresh instance per navigation)
+            builder.Services.AddTransient<ProjectsViewModel>();
+            builder.Services.AddTransient<ProjectDetailViewModel>();
+            builder.Services.AddTransient<TaskDetailViewModel>();
+
+            // Pages (Transient — resolved with injected ViewModels)
             builder.Services.AddTransient<ProjectsPage>();
             builder.Services.AddTransient<ProjectDetailPage>();
             builder.Services.AddTransient<TaskDetailPage>();

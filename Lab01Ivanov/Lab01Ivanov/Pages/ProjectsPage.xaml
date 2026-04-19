@@ -15,48 +15,34 @@
                    FontSize="14" TextColor="#8080A0" Margin="0,4,0,0" />
         </VerticalStackLayout>
 
-        <!-- Projects list -->
+        <!-- Projects list — ItemsSource and SelectedItem bound to ViewModel -->
         <CollectionView Grid.Row="1"
-                        x:Name="ProjectsCollection"
+                        ItemsSource="{Binding Projects}"
+                        SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
                         SelectionMode="Single"
-                        SelectionChanged="OnProjectSelected"
                         Margin="0,8">
-
             <CollectionView.EmptyView>
                 <Label Text="No projects found." HorizontalOptions="Center"
-                       VerticalOptions="Center" TextColor="#8080A0" />
+                       TextColor="#8080A0" Margin="0,20" />
             </CollectionView.EmptyView>
-
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="16,6">
                         <Frame BackgroundColor="#16213E" CornerRadius="14"
                                Padding="18,14" HasShadow="True">
-
                             <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
-
-                                <!-- Name + Type badge -->
                                 <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Text="{Binding Name}"
-                                           FontSize="17" FontAttributes="Bold"
-                                           TextColor="#E0E0F0" />
-                                    <Border Grid.Column="1"
-                                            BackgroundColor="#0F3460"
-                                            StrokeShape="RoundRectangle 8"
-                                            Padding="10,4">
-                                        <Label Text="{Binding Type}"
+                                    <Label Grid.Column="0" Text="{Binding Name}"
+                                           FontSize="17" FontAttributes="Bold" TextColor="#E0E0F0" />
+                                    <Border Grid.Column="1" BackgroundColor="#0F3460"
+                                            StrokeShape="RoundRectangle 8" Padding="10,4">
+                                        <Label Text="{Binding TypeDisplay}"
                                                FontSize="11" TextColor="#4FC3F7" />
                                     </Border>
                                 </Grid>
-
-                                <!-- Description -->
-                                <Label Grid.Row="1"
-                                       Text="{Binding Description}"
+                                <Label Grid.Row="1" Text="{Binding Description}"
                                        FontSize="13" TextColor="#8080A0"
                                        MaxLines="2" LineBreakMode="TailTruncation" />
-
-                                <!-- Progress % text -->
                                 <Label Grid.Row="2" FontSize="12">
                                     <Label.FormattedText>
                                         <FormattedString>
@@ -66,8 +52,6 @@
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
-
-                                <!-- Progress bar (uses ProgressFraction 0.0–1.0) -->
                                 <ProgressBar Grid.Row="3"
                                              Progress="{Binding ProgressFraction}"
                                              ProgressColor="#4FC3F7" />
@@ -77,6 +61,5 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
     </Grid>
 </ContentPage>

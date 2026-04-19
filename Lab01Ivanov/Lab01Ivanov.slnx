@@ -1,7 +1,7 @@
 <Solution>
   <Project Path="Lab01Ivanov/Lab01Ivanov.csproj" />
   <Project Path="TaskManager.DBModels/TaskManager.DBModels.csproj" />
-  <Project Path="TaskManager.UIModels/TaskManager.UIModels.csproj" />
+  <Project Path="TaskManager.Repository/TaskManager.Repository.csproj" />
+  <Project Path="TaskManager.DTOModels/TaskManager.DTOModels.csproj" />
   <Project Path="TaskManager.Services/TaskManager.Services.csproj" />
-  <Project Path="TaskManagerConsole/TaskManagerConsole.csproj" />
 </Solution>
